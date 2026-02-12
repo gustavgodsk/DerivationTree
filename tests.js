@@ -288,4 +288,6 @@ function parseEnvString(str) {
     });
     return rho;
 }
-runTests();
+
+// Uncomment to run tests
+// runTests();
