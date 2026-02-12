@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>MiniScala v3 Derivation Tree</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <h1>MiniScala v3: Derivation Trees</h1>
+
+    <div class="controls">
+      <div class="input-group">
+        <label for="initialEnv">Initial Environment</label>
+        <input
+          type="text"
+          id="initialEnv"
+          value="x = 1; y = (2, 3)"
+          placeholder="x=1; y=(2,3)"
+          oninput="resetState()"
+        />
+      </div>
+
+      <div class="input-group" style="flex-grow: 2">
+        <label for="inputExpr">Expression</label>
+        <input
+          type="text"
+          id="inputExpr"
+          value="{ val z = 1; if (z == x) 42 else 17 }"
+          placeholder="{ val z = 1; if (z == x) 42 else 17 }"
+          oninput="resetState()"
+        />
+      </div>
+
+      <button class="btn-step" onclick="step()">Step</button>
+      <button class="btn-derive" onclick="deriveAll()">Derive All</button>
+      <button class="btn-reset" onclick="reset()">Reset</button>
+      <label class="toggle-label">
+        <input
+          type="checkbox"
+          id="shortenToggle"
+          checked
+          onchange="refreshView()"
+        />
+        Shorten
+      </label>
+    </div>
+
+    <div class="split-view">
+      <div class="panel" id="typePanel">
+        <h2 class="type-header">
+          <span
+            >Type Derivation (Static)
+            <span class="step-counter" id="typeCounter"></span
+          ></span>
+          <button class="btn-expand" onclick="toggleFullScreen('typePanel')">
+            ⛶
+          </button>
+        </h2>
+        <div id="typeOutput" class="tree-container"></div>
+      </div>
+
+      <div class="panel" id="opPanel">
+        <h2 class="op-header">
+          <span
+            >Operational Semantics (Dynamic)
+            <span class="step-counter" id="opCounter"></span
+          ></span>
+          <button class="btn-expand" onclick="toggleFullScreen('opPanel')">
+            ⛶
+          </button>
+        </h2>
+        <div id="opOutput" class="tree-container"></div>
+      </div>
+    </div>
+    <div
+      class="panel"
+      style="margin-top: 20px; width: 100%; box-sizing: border-box"
+    >
+      <h2 class="type-header">Type Rules Reference</h2>
+      <div
+        id="typeRulesGrid"
+        class="rules-grid"
+        style="border-bottom: 2px solid #eee; margin-bottom: 20px"
+      ></div>
+
+      <h2 class="op-header">Operational Semantics Reference</h2>
+      <div id="opRulesGrid" class="rules-grid"></div>
+    </div>
+
+    <div id="ruleTooltip" class="rule-tooltip" style="display: none"></div>
+    <script src="script.js"></script>
+    <script src="tests.js"></script>
+  </body>
+</html>

@@ -1,0 +1,364 @@
+
+:root {
+    --bg-color: #f8f9fa;
+    --line-color: #333;
+    --op-color: #d63384; /* Pink for Runtime */
+    --type-color: #0d6efd; /* Blue for Static Types */
+    --font-main: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    --font-mono: "Consolas", "Monaco", monospace;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--bg-color);
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.controls {
+    width: 100%;
+    max-width: 1200px;
+    margin-bottom: 1rem;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-width: 250px;
+}
+
+.input-group label {
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-bottom: 4px;
+    color: #555;
+}
+
+input[type="text"] {
+    padding: 10px;
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    padding: 10px 20px;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s;
+    height: 42px; /* Match input height */
+    align-self: flex-end;
+}
+
+.btn-derive {
+    background-color: #212529;
+}
+.btn-derive:hover {
+    background-color: #000;
+}
+
+.btn-step {
+    background-color: #198754;
+}
+.btn-step:hover {
+    background-color: #157347;
+}
+
+.btn-reset {
+    background-color: #dc3545;
+}
+.btn-reset:hover {
+    background-color: #bb2d3b;
+}
+
+.toggle-label {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    cursor: pointer;
+    user-select: none;
+    align-self: flex-end;
+    height: 42px;
+}
+.toggle-label input {
+    margin-right: 6px;
+}
+
+/* Split View Layout */
+.split-view {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    gap: 20px;
+}
+
+.panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    min-width: 0;
+}
+
+h2 {
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-top: 0;
+    font-size: 1.1rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.step-counter {
+    font-size: 0.8rem;
+    color: #666;
+    font-weight: normal;
+    align-self: flex-end;
+}
+
+.type-header {
+    color: var(--type-color);
+}
+.op-header {
+    color: var(--op-color);
+}
+
+/* Tree Container with Scroll */
+.tree-container {
+    flex-grow: 1;
+    overflow: auto;
+    padding: 20px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.tree-container > .node-wrapper {
+    margin: auto;
+}
+
+/* TREE VISUALIZATION */
+.node-wrapper {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: flex-end;
+    margin: 0 2px;
+}
+
+.inference-rule {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 8px;
+}
+
+.premises {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 30px;
+    padding-bottom: 4px;
+    min-height: 20px;
+}
+
+.conclusion-container {
+    border-top: 2px solid var(--line-color);
+    padding-top: 4px;
+    text-align: center;
+    width: 100%;
+    margin-top: 2px;
+}
+
+.conclusion {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    white-space: nowrap;
+    color: #333;
+}
+
+.rule-label {
+    font-size: 0.7rem;
+    font-weight: bold;
+    white-space: nowrap;
+    margin-bottom: 1.7em;
+    padding-left: 4px;
+}
+
+.op-rule .rule-label {
+    color: var(--op-color);
+}
+.type-rule .rule-label {
+    color: var(--type-color);
+}
+
+.error {
+    color: #dc3545;
+    background: #ffe6e6;
+    padding: 10px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+.rules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 10px;
+}
+
+/* Individual Rule Card */
+.rule-card {
+    border: 1px solid #eee;
+    padding: 10px;
+    border-radius: 6px;
+    background: #fafafa;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.rule-title {
+    font-weight: bold;
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+}
+
+#typeRulesGrid .rule-title {
+}
+
+
+#opRulesGrid .rule-title {
+}
+
+/* Math Inference Rule Styling (Pure CSS) */
+.math-rule {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: "Times New Roman", Times, serif;
+    font-style: italic;
+    font-size: 1.1rem;
+}
+
+.math-premises {
+    border-bottom: 1px solid black;
+    padding: 0 5px;
+    margin-bottom: 2px;
+    text-align: center;
+    display: flex;
+    gap: 15px; /* Space between multiple premises */
+}
+
+.math-conclusion {
+    padding-top: 2px;
+    text-align: center;
+}
+
+/* Tooltip Styling */
+.rule-tooltip {
+    position: fixed;
+    background: white;
+    border: 1px solid #333;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    border-radius: 6px;
+    z-index: 1000;
+    pointer-events: none; /* Let mouse pass through */
+    min-width: 200px;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Hover Effect for Labels in Tree */
+.rule-label {
+    cursor: help;
+    border-bottom: 1px dotted #ccc;
+    transition: color 0.2s;
+}
+.rule-label:hover {
+    color: #000 !important;
+    background-color: rgba(255, 255, 0, 0.2);
+}
+/* Expand Button */
+.btn-expand {
+    background: none;
+    border: 1px solid #ccc;
+    color: #555;
+    font-size: 1.2rem;
+    padding: 2px 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+    height: auto; /* Override default button height */
+    line-height: 1;
+}
+
+.btn-expand:hover {
+    background: #eee;
+    color: #000;
+}
+
+/* Full Screen Mode */
+.fullscreen-panel {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 999;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    padding: 20px !important;
+    box-sizing: border-box;
+}
+
+.fullscreen-panel .tree-container {
+    height: calc(100vh - 80px) !important; /* Adjust for header */
+}
+
+/* Highlight target rule when clicked */
+.highlight-rule {
+    animation: flash-highlight 2s ease-out;
+    border: 2px solid #0d6efd !important;
+}
+
+@keyframes flash-highlight {
+0% {
+    background-color: rgba(13, 110, 253, 0.3);
+}
+100% {
+    background-color: #fafafa;
+}
+}
+
+/* Clickable labels */
+.rule-label {
+    cursor: pointer !important; /* Changed from help to pointer */
+}
