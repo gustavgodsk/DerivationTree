@@ -629,18 +629,26 @@ function ensureParsed() {
         const parser = new Parser(tokens);
         const ast = parser.parse();
 
+        // Generate Type Tree
         try {
             appState.typeTree = deriveType(initGamma, ast);
-            assignIds(appState.typeTree, { val: 0 });
+            const counter = { val: 0 };
+            assignIds(appState.typeTree, counter);
+            appState.typeTotal = counter.val; // Store total nodes
         } catch (e) {
             appState.typeTree = { error: e.message };
+            appState.typeTotal = 0;
         }
 
+        // Generate Op Tree
         try {
             appState.opTree = deriveOp(initRho, ast);
-            assignIds(appState.opTree, { val: 0 });
+            const counter = { val: 0 };
+            assignIds(appState.opTree, counter);
+            appState.opTotal = counter.val; // Store total nodes
         } catch (e) {
             appState.opTree = { error: e.message };
+            appState.opTotal = 0;
         }
 
         appState.parsed = true;
@@ -651,6 +659,58 @@ function ensureParsed() {
         document.getElementById("opOutput").innerHTML =
             `<div class="error">${e.message}</div>`;
         return false;
+    }
+}
+
+function refreshView() {
+    const shorten = document.getElementById("shortenToggle").checked;
+    const tOut = document.getElementById("typeOutput");
+    const opOut = document.getElementById("opOutput");
+
+    tOut.innerHTML = "";
+    opOut.innerHTML = "";
+
+    // Render Type Tree
+    if (appState.typeTree) {
+        if (appState.typeTree.error)
+            tOut.innerHTML = `<div class="error">${appState.typeTree.error}</div>`;
+        else {
+            const dom = render(appState.typeTree, "type", shorten, appState.step);
+            if (dom) tOut.appendChild(dom);
+            else
+                tOut.innerHTML = '<div style="color:#888">Click Step to start...</div>';
+        }
+    }
+
+    // Render Op Tree
+    if (appState.opTree) {
+        if (appState.opTree.error)
+            opOut.innerHTML = `<div class="error">${appState.opTree.error}</div>`;
+        else {
+            const dom = render(appState.opTree, "op", shorten, appState.step);
+            if (dom) opOut.appendChild(dom);
+            else
+                opOut.innerHTML =
+                    '<div style="color:#888">Click Step to start...</div>';
+        }
+    }
+
+    // FIXED: Step Counter Logic
+    // Shows min(current_step, total_nodes)
+    if (appState.typeTree && !appState.typeTree.error) {
+        const current = Math.min(appState.step, appState.typeTotal);
+        document.getElementById("typeCounter").innerText =
+            `(Step ${current}/${appState.typeTotal})`;
+    } else {
+        document.getElementById("typeCounter").innerText = "";
+    }
+
+    if (appState.opTree && !appState.opTree.error) {
+        const current = Math.min(appState.step, appState.opTotal);
+        document.getElementById("opCounter").innerText =
+            `(Step ${current}/${appState.opTotal})`;
+    } else {
+        document.getElementById("opCounter").innerText = "";
     }
 }
 
@@ -739,47 +799,6 @@ function render(node, type, shorten, maxStep) {
     wrapper.appendChild(ruleDiv);
     wrapper.appendChild(labelDiv);
     return wrapper;
-}
-
-function refreshView() {
-    const shorten = document.getElementById("shortenToggle").checked;
-    const tOut = document.getElementById("typeOutput");
-    const opOut = document.getElementById("opOutput");
-
-    tOut.innerHTML = "";
-    opOut.innerHTML = "";
-
-    if (appState.typeTree) {
-        if (appState.typeTree.error)
-            tOut.innerHTML = `<div class="error">${appState.typeTree.error}</div>`;
-        else {
-            const dom = render(appState.typeTree, "type", shorten, appState.step);
-            if (dom) tOut.appendChild(dom);
-            else
-                tOut.innerHTML = '<div style="color:#888">Click Step to start...</div>';
-        }
-    }
-
-    if (appState.opTree) {
-        if (appState.opTree.error)
-            opOut.innerHTML = `<div class="error">${appState.opTree.error}</div>`;
-        else {
-            const dom = render(appState.opTree, "op", shorten, appState.step);
-            if (dom) opOut.appendChild(dom);
-            else
-                opOut.innerHTML =
-                    '<div style="color:#888">Click Step to start...</div>';
-        }
-    }
-
-    document.getElementById("typeCounter").innerText =
-        appState.typeTree && !appState.typeTree.error
-            ? `(Step ${Math.min(appState.step, appState.typeTree.id + 10)})`
-            : "";
-    document.getElementById("opCounter").innerText =
-        appState.opTree && !appState.opTree.error
-            ? `(Step ${Math.min(appState.step, appState.opTree.id + 10)})`
-            : "";
 }
 
 /** * ==================================================================
